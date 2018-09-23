@@ -49,6 +49,9 @@ dependencies {
 
 }
 
+task stage(dependsOn: ['build', 'clean'])
+build.mustRunAfter clean
+
 kotlin {
     experimental {
         coroutines "enable"
