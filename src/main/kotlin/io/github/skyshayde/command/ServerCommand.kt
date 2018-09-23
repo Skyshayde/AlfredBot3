@@ -68,6 +68,7 @@ class ServerCommand() {
         // TODO make this dynamic
         when (instance) {
             "survival" -> return "us-east1-b"
+            "terraria" -> return "us-east1-b"
             else -> return ""
         }
     }
