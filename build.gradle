@@ -51,7 +51,13 @@ dependencies {
 
 task stage(dependsOn: ['build', 'clean'])
 build.mustRunAfter clean
-
+build {
+    manifest {
+        attributes(
+                'Main-Class': 'io.github.skyshayde.AlfredBot'
+        )
+    }
+}
 kotlin {
     experimental {
         coroutines "enable"
