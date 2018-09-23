@@ -57,7 +57,7 @@ build.mustRunAfter clean
 shadowJar {
     manifest {
         attributes(
-                'Main-Class': 'io.github.skyshayde.AlfredBot'
+                'Main-Class': 'io.github.skyshayde.AlfredBotKt'
         )
     }
 }
