@@ -13,13 +13,16 @@ buildscript {
     }
 }
 
+plugins {
+    id "com.github.johnrengelman.shadow" version "2.0.4"
+}
+
 group 'io.github.skyshayde'
 version '1.0-SNAPSHOT'
 
 apply plugin: 'java'
 apply plugin: 'kotlin'
 apply plugin: 'kotlinx-serialization'
-
 sourceCompatibility = 1.8
 
 repositories {
@@ -49,9 +52,9 @@ dependencies {
 
 }
 
-task stage(dependsOn: ['build', 'clean'])
+task stage(dependsOn: ['shadowJar', 'clean'])
 build.mustRunAfter clean
-build {
+shadowJar {
     manifest {
         attributes(
                 'Main-Class': 'io.github.skyshayde.AlfredBot'
