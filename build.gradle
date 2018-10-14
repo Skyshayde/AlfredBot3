@@ -2,7 +2,8 @@ buildscript {
     ext.kotlin_version = '1.2.51'
     ext.serialization_version = '0.6.0'
     ext.ktor_version = '0.9.3'
-
+    ext.kotlinx_html_version = '0.6.10'
+    
     repositories {
         mavenCentral()
         maven { url "https://kotlin.bintray.com/kotlinx" }
@@ -36,7 +37,8 @@ repositories {
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     compile "org.jetbrains.kotlinx:kotlinx-serialization-runtime:$serialization_version"
-
+    compile "org.jetbrains.kotlinx:kotlinx-html-jvm:$kotlinx_html_version"
+    
     compile "io.ktor:ktor-server-core:$ktor_version"
     compile "io.ktor:ktor-server-netty:$ktor_version"
 
