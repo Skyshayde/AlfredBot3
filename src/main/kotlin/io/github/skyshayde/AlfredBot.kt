@@ -2,6 +2,7 @@ package io.github.skyshayde
 
 import com.darichey.discord.CommandListener
 import com.darichey.discord.CommandRegistry
+import io.github.skyshayde.command.EmoteCommand
 import io.github.skyshayde.command.RoleCommand
 import io.github.skyshayde.command.ServerCommand
 import sx.blah.discord.api.ClientBuilder
@@ -39,6 +40,7 @@ class AlfredBot() {
     init {
         var roleCommand: RoleCommand = RoleCommand();
         var serverCommand: ServerCommand = ServerCommand();
+        var emoteCommand: EmoteCommand = EmoteCommand();
     }
 
     companion object {
