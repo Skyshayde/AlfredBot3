@@ -33,6 +33,8 @@ class RoleCommand() {
         roles["monsterhunterworld"] = "Hunters"
         roles["starlords"] = "Starlords"
         roles["stellaris"] = "Starlords"
+        roles["smashbros"] = "smash bros"
+        roles["ssb"] = "smash bros"
         var role = Command.builder()
                 .onCalled { ctx ->
                     val cmdArgs = ctx.args
