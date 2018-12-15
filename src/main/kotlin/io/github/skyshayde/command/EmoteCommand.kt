@@ -15,17 +15,10 @@ class EmoteCommand() {
                 .onCalled { ctx ->
                     val cmdArgs = ctx.args
                     if (cmdArgs.size > 0) {
-//                        ctx.client.guilds.forEach {
-//                            if (it.longID != ctx.guild.longID) {
-//                                it.emojis.forEach { j ->
-//                                    ctx.message.addReaction(j)
-//                                }
-//                            }
-//                        }
                         if (cmdArgs.get(0).equals("stats")) {
                             if(ctx.author.getPermissionsForGuild(ctx.guild).contains(Permissions.MANAGE_EMOJIS)) {
                                 ctx.channel.sendMessage("Calculating emote usage")
-                                ctx.channel.sendMessage(stats(ctx))
+                                ctx.channel.sendMessage("```${stats(ctx)}```")
                             }
                         }
                     }
@@ -52,14 +45,26 @@ class EmoteCommand() {
             }
         }
         val sum = emote_id.entries.sumBy {(k,v) -> if(ctx.guild.getEmojiByID(k) != null) v else 0  }
-        val output: MutableList<String> = mutableListOf()
-        var counter: MutableInt = MutableInt(0)
+        val data: MutableList<Triple<String, String, String>> = mutableListOf()
         for((key, value) in emote_id.entries.sortedByDescending { it.value }){
             val emote = ctx.guild.getEmojiByID(key)
             if (emote == null) continue
-            output.add("${counter.incrementAndGet()}.  ${emote.name} has ${value} uses in the last month and makes up ${(value.toFloat()/sum) * 100}% of emotes")
+            data.add(Triple(":${emote.name}:", value.toString(), "%.2f".format((value.toFloat()/sum) * 100)+"%"))
         }
-        return output.joinToString("\n")
+        val col1Length = data.maxBy { it.first.length }!!.first.length
+        val col2Length = data.maxBy { it.second.length }!!.second.length
+        val col3Length = data.maxBy { it.third.length }!!.third.length
+        val output: MutableList<String> = mutableListOf()
+        val spacer: String = "\n╠═${"".padEnd(col1Length,'═')}═╬═${"".padEnd(col2Length,'═')}═╬═${"".padEnd(col3Length,'═')}═╣\n"
+        val prefix: String = "╔${"".padEnd(col1Length+2,'═')}╦${"".padEnd(col2Length+2,'═')}╦${"".padEnd(col3Length+2,'═')}╗\n║ ${"Name".padEnd(col1Length)} ║ ${"#".padEnd(col2Length)} ║ ${"%".padEnd(col3Length)} ║ $spacer"
+        val postfix: String = "\n╚${"".padEnd(col1Length+2,'═')}╩${"".padEnd(col2Length+2,'═')}╩${"".padEnd(col3Length+2,'═')}╝"
+        for (triple in data) {
+            val paddedName: String = triple.first.padEnd(col1Length)
+            val paddedValue: String = triple.second.padEnd(col2Length)
+            val paddedPercent: String = triple.third.padEnd(col3Length)
+            output.add("║ $paddedName ║ $paddedValue ║ $paddedPercent ║")
+        }
+        return prefix + output.joinToString(spacer) + postfix
     }
 
 }
