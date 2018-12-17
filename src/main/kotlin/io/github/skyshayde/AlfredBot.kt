@@ -5,6 +5,7 @@ import com.darichey.discord.CommandRegistry
 import io.github.skyshayde.command.EmoteCommand
 import io.github.skyshayde.command.RoleCommand
 import io.github.skyshayde.command.ServerCommand
+import io.github.skyshayde.features.LevelupCleaner
 import sx.blah.discord.api.ClientBuilder
 import sx.blah.discord.api.IDiscordClient
 import sx.blah.discord.api.events.EventDispatcher
@@ -16,6 +17,7 @@ import sx.blah.discord.util.DiscordException
 fun main(args: Array<String>) {
     AlfredBot.dispatcher?.registerListener(AlfredBot());
     AlfredBot.dispatcher?.registerListener(CommandListener(AlfredBot.registry));
+    AlfredBot.dispatcher?.registerListener(LevelupCleaner())
 
 }
 
