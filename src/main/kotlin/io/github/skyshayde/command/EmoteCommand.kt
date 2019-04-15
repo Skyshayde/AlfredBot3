@@ -15,7 +15,7 @@ class EmoteCommand {
                     val cmdArgs = ctx.args
                     if (cmdArgs.size > 0) {
                         if (cmdArgs[0] == "stats") {
-                            if(ctx.author.getPermissionsForGuild(ctx.guild).contains(Permissions.MANAGE_EMOJIS)) {
+                            if (ctx.author.getPermissionsForGuild(ctx.guild).contains(Permissions.MANAGE_EMOJIS)) {
                                 ctx.channel.sendMessage("Calculating emote usage")
                                 ctx.channel.sendMessage("```${stats(ctx)}```")
                             }
@@ -43,20 +43,27 @@ class EmoteCommand {
                 }
             }
         }
-        val sum = emoteId.entries.sumBy { (k,v) -> if(ctx.guild.getEmojiByID(k) != null) v else 0  }
+        val sum = emoteId.entries.sumBy { (k, v) -> if (ctx.guild.getEmojiByID(k) != null) v else 0 }
         val data: MutableList<Triple<String, String, String>> = mutableListOf()
-        for((key, value) in emoteId.entries.sortedByDescending { it.value }){
+        for ((key, value) in emoteId.entries.sortedByDescending { it.value }) {
             val emote = ctx.guild.getEmojiByID(key) ?: continue
-            data.add(Triple(":${emote.name}:", value.toString(), "%.2f".format((value.toFloat()/sum) * 100)+"%"))
+            data.add(Triple(":${emote.name}:", value.toString(), "%.2f".format((value.toFloat() / sum) * 100) + "%"))
         }
-        val col1Length = data.maxBy { it.first.length }!!.first.length
-        val col2Length = data.maxBy { it.second.length }!!.second.length
-        val col3Length = data.maxBy { it.third.length }!!.third.length
+        return tablify(data)
+    }
+
+
+
+    fun tablify(list: List<Triple<String, String, String>>): String {
+        val col1Length = list.maxBy { it.first.length }!!.first.length
+        val col2Length = list.maxBy { it.second.length }!!.second.length
+        val col3Length = list.maxBy { it.third.length }!!.third.length
+
         val output: MutableList<String> = mutableListOf()
-        val spacer: String = "\n╠═${"".padEnd(col1Length,'═')}═╬═${"".padEnd(col2Length,'═')}═╬═${"".padEnd(col3Length,'═')}═╣\n"
-        val prefix: String = "╔${"".padEnd(col1Length+2,'═')}╦${"".padEnd(col2Length+2,'═')}╦${"".padEnd(col3Length+2,'═')}╗\n║ ${"Name".padEnd(col1Length)} ║ ${"#".padEnd(col2Length)} ║ ${"%".padEnd(col3Length)} ║ $spacer"
-        val postfix: String = "\n╚${"".padEnd(col1Length+2,'═')}╩${"".padEnd(col2Length+2,'═')}╩${"".padEnd(col3Length+2,'═')}╝"
-        for (triple in data) {
+        val spacer: String = "\n╠═${"".padEnd(col1Length, '═')}═╬═${"".padEnd(col2Length, '═')}═╬═${"".padEnd(col3Length, '═')}═╣\n"
+        val prefix: String = "╔${"".padEnd(col1Length + 2, '═')}╦${"".padEnd(col2Length + 2, '═')}╦${"".padEnd(col3Length + 2, '═')}╗\n║ ${"Name".padEnd(col1Length)} ║ ${"#".padEnd(col2Length)} ║ ${"%".padEnd(col3Length)} ║ $spacer"
+        val postfix: String = "\n╚${"".padEnd(col1Length + 2, '═')}╩${"".padEnd(col2Length + 2, '═')}╩${"".padEnd(col3Length + 2, '═')}╝"
+        for (triple in list) {
             val paddedName: String = triple.first.padEnd(col1Length)
             val paddedValue: String = triple.second.padEnd(col2Length)
             val paddedPercent: String = triple.third.padEnd(col3Length)
