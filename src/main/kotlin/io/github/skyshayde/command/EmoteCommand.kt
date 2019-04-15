@@ -49,25 +49,30 @@ class EmoteCommand {
             val emote = ctx.guild.getEmojiByID(key) ?: continue
             data.add(Triple(":${emote.name}:", value.toString(), "%.2f".format((value.toFloat() / sum) * 100) + "%"))
         }
-        return tablify(data)
+        val t: MutableList<Map<String, String>> = mutableListOf()
+        for(i in data) {
+            val a: MutableMap<String, String> = mutableMapOf()
+            a["Name"] = i.first
+            a["#"] = i.second
+            a["%"] = i.third
+            t.add(a)
+        }
+        return tablify(t)
     }
 
-
-
-    fun tablify(list: List<Triple<String, String, String>>): String {
-        val col1Length = list.maxBy { it.first.length }!!.first.length
-        val col2Length = list.maxBy { it.second.length }!!.second.length
-        val col3Length = list.maxBy { it.third.length }!!.third.length
+    fun tablify(list: List<Map<String, String>>): String {
+        val columnLengths = mutableListOf<Int>()
+        for(key in list[0].keys) {
+            columnLengths.add(list.maxBy { it.get(key)!!.length }!!.get(key)!!.length)
+        }
 
         val output: MutableList<String> = mutableListOf()
-        val spacer: String = "\n╠═${"".padEnd(col1Length, '═')}═╬═${"".padEnd(col2Length, '═')}═╬═${"".padEnd(col3Length, '═')}═╣\n"
-        val prefix: String = "╔${"".padEnd(col1Length + 2, '═')}╦${"".padEnd(col2Length + 2, '═')}╦${"".padEnd(col3Length + 2, '═')}╗\n║ ${"Name".padEnd(col1Length)} ║ ${"#".padEnd(col2Length)} ║ ${"%".padEnd(col3Length)} ║ $spacer"
-        val postfix: String = "\n╚${"".padEnd(col1Length + 2, '═')}╩${"".padEnd(col2Length + 2, '═')}╩${"".padEnd(col3Length + 2, '═')}╝"
+        val spacer = "\n╠═${columnLengths.map { "".padEnd(it,'═') }.joinToString("═╬═")}═╣\n"
+        var prefix = "╔${columnLengths.map { "".padEnd(it + 2,'═') }.joinToString("╦")}╗"
+        prefix += "\n║ ${columnLengths.mapIndexed {index, it -> list[0].keys.elementAt(index).padEnd(it)}.joinToString(" ║ ")} ║ $spacer"
+        val postfix = "╚${columnLengths.map { "".padEnd(it + 2,'═') }.joinToString("╩")}╝"
         for (triple in list) {
-            val paddedName: String = triple.first.padEnd(col1Length)
-            val paddedValue: String = triple.second.padEnd(col2Length)
-            val paddedPercent: String = triple.third.padEnd(col3Length)
-            output.add("║ $paddedName ║ $paddedValue ║ $paddedPercent ║")
+            output.add("║ ${columnLengths.mapIndexed {index, it -> list[0].values.elementAt(index).padEnd(it)}.joinToString(" ║ ") } ║\n")
         }
         return prefix + output.joinToString(spacer) + postfix
     }
