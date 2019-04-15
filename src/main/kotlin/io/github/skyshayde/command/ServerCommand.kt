@@ -10,37 +10,40 @@ import com.google.api.services.compute.ComputeScopes
 import io.github.skyshayde.AlfredBot
 
 
-class ServerCommand() {
-    private val JSON_FACTORY = JacksonFactory.getDefaultInstance()
+class ServerCommand {
+    companion object {
+        private val JSON_FACTORY = JacksonFactory.getDefaultInstance()
+    }
+
     private var httpTransport: HttpTransport? = null
 
     init {
-        var start = Command.builder()
+        val start = Command.builder()
                 .onCalled { ctx ->
                     val cmdArgs = ctx.args
                     if (cmdArgs.size > 0) {
                         val compute: Compute = getCompute(AlfredBot.GCP_APP_NAME)
                         compute.instances().start(AlfredBot.GCP_APP_NAME, getZoneFromName(cmdArgs[0]), cmdArgs[0]).execute()
-                        ctx.getChannel().sendMessage("Server is starting");
+                        ctx.channel.sendMessage("Server is starting")
                     }
                 }
                 .build()
         AlfredBot.registry.register(start, "start")
 
-        var stop = Command.builder()
+        val stop = Command.builder()
                 .onCalled { ctx ->
                     val cmdArgs = ctx.args
                     if (cmdArgs.size > 0) {
                         val compute: Compute = getCompute(AlfredBot.GCP_APP_NAME)
                         compute.instances().stop(AlfredBot.GCP_APP_NAME, getZoneFromName(cmdArgs[0]), cmdArgs[0]).execute()
-                        ctx.getChannel().sendMessage("Server is stopping");
+                        ctx.channel.sendMessage("Server is stopping")
 
                     }
                 }
                 .build()
         AlfredBot.registry.register(stop, "stop")
 
-        var status = Command.builder()
+        val status = Command.builder()
                 .onCalled { ctx ->
                     val cmdArgs = ctx.args
                     if (cmdArgs.size > 0) {
@@ -57,19 +60,19 @@ class ServerCommand() {
         AlfredBot.registry.register(status, "status")
     }
 
-    fun getCompute(appName: String): Compute {
-        httpTransport = GoogleNetHttpTransport.newTrustedTransport();
+    private fun getCompute(appName: String): Compute {
+        httpTransport = GoogleNetHttpTransport.newTrustedTransport()
         val stream = this.javaClass.classLoader.getResourceAsStream("client_secret.json")
-        var credential: GoogleCredential = GoogleCredential.fromStream(stream).createScoped(listOf(ComputeScopes.COMPUTE));
+        val credential: GoogleCredential = GoogleCredential.fromStream(stream).createScoped(listOf(ComputeScopes.COMPUTE))
         return Compute.Builder(httpTransport, JSON_FACTORY, credential).setApplicationName(appName).build()
     }
 
-    fun getZoneFromName(instance: String): String {
+    private fun getZoneFromName(instance: String): String {
         // TODO make this dynamic
-        when (instance) {
-            "survival" -> return "us-east1-b"
-            "terraria" -> return "us-east1-b"
-            else -> return ""
+        return when (instance) {
+            "survival" -> "us-east1-b"
+            "terraria" -> "us-east1-b"
+            else -> ""
         }
     }
 }

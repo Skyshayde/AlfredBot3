@@ -6,11 +6,10 @@ import sx.blah.discord.handle.obj.IRole
 import sx.blah.discord.handle.obj.IUser
 import java.util.*
 
-class RoleCommand() {
-    internal var roles: MutableMap<String, String>
+class RoleCommand {
+    private var roles: MutableMap<String, String> = HashMap()
 
     init {
-        roles = HashMap()
 
         // TODO make this dynamic
         roles["overwatch"] = "Overwatchers"
@@ -35,7 +34,7 @@ class RoleCommand() {
         roles["stellaris"] = "Starlords"
         roles["smashbros"] = "smash bros"
         roles["ssb"] = "smash bros"
-        var role = Command.builder()
+        val role = Command.builder()
                 .onCalled { ctx ->
                     val cmdArgs = ctx.args
                     if (cmdArgs.size > 0) {
@@ -50,13 +49,13 @@ class RoleCommand() {
 
     }
 
-    fun roleToggle(role: IRole, user: IUser): Boolean {
-        if (user.hasRole(role)) {
+    private fun roleToggle(role: IRole, user: IUser): Boolean {
+        return if (user.hasRole(role)) {
             user.removeRole(role)
-            return false
+            false
         } else {
             user.addRole(role)
-            return true
+            true
         }
     }
 }
