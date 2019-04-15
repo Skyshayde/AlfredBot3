@@ -17,7 +17,21 @@ class EmoteCommand {
                         if (cmdArgs[0] == "stats") {
                             if (ctx.author.getPermissionsForGuild(ctx.guild).contains(Permissions.MANAGE_EMOJIS)) {
                                 ctx.channel.sendMessage("Calculating emote usage")
-                                ctx.channel.sendMessage("```${stats(ctx)}```")
+                                val messages: MutableList<String> = mutableListOf()
+                                val stats: MutableList<String> = stats(ctx).split("\n").toMutableList()
+                                var temp = ""
+                                while(stats.size > 0) {
+                                    if(temp.length + stats.first().length > 1994) {
+                                        messages.add(temp)
+                                        temp = ""
+                                    }
+                                    temp += stats.first() + "\n"
+                                    stats.removeAt(0)
+                                }
+                                messages.add(temp)
+                                temp = ""
+                                messages.forEach {ctx.channel.sendMessage("```$it```")}
+
                             }
                         }
                     }
@@ -70,9 +84,9 @@ class EmoteCommand {
         val spacer = "\n╠═${columnLengths.map { "".padEnd(it,'═') }.joinToString("═╬═")}═╣\n"
         var prefix = "╔${columnLengths.map { "".padEnd(it + 2,'═') }.joinToString("╦")}╗"
         prefix += "\n║ ${columnLengths.mapIndexed {index, it -> list[0].keys.elementAt(index).padEnd(it)}.joinToString(" ║ ")} ║ $spacer"
-        val postfix = "╚${columnLengths.map { "".padEnd(it + 2,'═') }.joinToString("╩")}╝"
+        val postfix = "\n╚${columnLengths.map { "".padEnd(it + 2,'═') }.joinToString("╩")}╝"
         for (triple in list) {
-            output.add("║ ${columnLengths.mapIndexed {index, it -> list[0].values.elementAt(index).padEnd(it)}.joinToString(" ║ ") } ║\n")
+            output.add("║ ${columnLengths.mapIndexed {index, it -> triple.values.elementAt(index).padEnd(it)}.joinToString(" ║ ") } ║")
         }
         return prefix + output.joinToString(spacer) + postfix
     }
