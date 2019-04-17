@@ -2,9 +2,7 @@ package io.github.skyshayde
 
 import com.darichey.discord.CommandListener
 import com.darichey.discord.CommandRegistry
-import io.github.skyshayde.command.EmoteCommand
-import io.github.skyshayde.command.RoleCommand
-import io.github.skyshayde.command.ServerCommand
+import io.github.skyshayde.command.*
 import io.github.skyshayde.command.admin.RoleAdminCommand
 import io.github.skyshayde.features.LevelupCleaner
 import sx.blah.discord.api.ClientBuilder
@@ -41,10 +39,12 @@ fun createClient(token: String, login: Boolean): IDiscordClient? { // Returns a 
 class AlfredBot {
 
     init {
-        RoleCommand()
-        RoleAdminCommand()
+        commands["role"] = RoleCommand("role")
+        commands["roles"] = RoleListCommand("roles")
+        commands["addrole"] = RoleAdminCommand("addrole")
+        commands["emote"] = EmoteCommand("emote")
+
         ServerCommand()
-        EmoteCommand()
     }
 
     companion object {
@@ -55,6 +55,25 @@ class AlfredBot {
         var dispatcher: EventDispatcher? = client?.dispatcher
         var registry = CommandRegistry("hey alfred, ")
         val db = DBManager()
+        val commands: MutableMap<String, Command> = mutableMapOf()
+
+        fun tablify(list: List<Map<String, String>>): String {
+            val columnLengths = mutableListOf<Int>()
+            for (key in list[0].keys) {
+                columnLengths.add(list.maxBy { it.get(key)!!.length }!!.get(key)!!.length)
+            }
+
+            val output: MutableList<String> = mutableListOf()
+            val spacer = "\n╠═${columnLengths.map { "".padEnd(it, '═') }.joinToString("═╬═")}═╣\n"
+            var prefix = "╔${columnLengths.map { "".padEnd(it + 2, '═') }.joinToString("╦")}╗"
+            prefix += "\n║ ${columnLengths.mapIndexed { index, it -> list[0].keys.elementAt(index).padEnd(it) }.joinToString(" ║ ")} ║ $spacer"
+            val postfix = "\n╚${columnLengths.map { "".padEnd(it + 2, '═') }.joinToString("╩")}╝"
+            for (triple in list) {
+                output.add("║ ${columnLengths.mapIndexed { index, it -> triple.values.elementAt(index).padEnd(it) }.joinToString(" ║ ")} ║")
+            }
+            return prefix + output.joinToString(spacer) + postfix
+        }
+
     }
 
     @EventSubscriber
