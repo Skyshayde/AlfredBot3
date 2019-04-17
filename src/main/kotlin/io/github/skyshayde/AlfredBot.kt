@@ -1,5 +1,6 @@
 package io.github.skyshayde
 
+import ch.qos.logback.classic.Level
 import com.darichey.discord.CommandListener
 import com.darichey.discord.CommandRegistry
 import io.github.skyshayde.command.*
@@ -11,6 +12,10 @@ import sx.blah.discord.api.events.EventDispatcher
 import sx.blah.discord.api.events.EventSubscriber
 import sx.blah.discord.handle.impl.events.ReadyEvent
 import sx.blah.discord.util.DiscordException
+import org.slf4j.LoggerFactory
+import ch.qos.logback.classic.LoggerContext
+
+
 
 
 fun main() {
@@ -43,8 +48,14 @@ class AlfredBot {
         commands["roles"] = RoleListCommand("roles")
         commands["addrole"] = RoleAdminCommand("addrole")
         commands["emote"] = EmoteCommand("emote")
+        commands["help"] = HelpCommand("help")
 
         ServerCommand()
+
+
+        val loggerContext = LoggerFactory.getILoggerFactory() as LoggerContext
+        val rootLogger = loggerContext.getLogger("org.mongodb.driver")
+        rootLogger.level = Level.OFF
     }
 
     companion object {

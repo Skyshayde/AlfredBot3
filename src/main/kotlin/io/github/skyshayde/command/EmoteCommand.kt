@@ -8,9 +8,14 @@ import java.time.LocalDateTime
 import java.time.ZoneOffset
 
 class EmoteCommand(name: String) : io.github.skyshayde.command.Command(name) {
-    override val help: String
-        get() = ""
+    override val desc: String
+        get() = "Lists statistics for emote usage"
 
+    override val help: String
+        get() = "" +
+                "Name: emote\n" +
+                "Usage: hey alfred, emote stats\n" +
+                "Notes: I don't really have anything else to do with this.  Ping me if you have ideas.  "
     override fun execute(ctx: CommandContext) {
         val cmdArgs = ctx.args
         if (cmdArgs.size > 0) {
