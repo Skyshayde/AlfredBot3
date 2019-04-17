@@ -20,8 +20,8 @@ class EmoteCommand {
                                 val messages: MutableList<String> = mutableListOf()
                                 val stats: MutableList<String> = stats(ctx).split("\n").toMutableList()
                                 var temp = ""
-                                while(stats.size > 0) {
-                                    if(temp.length + stats.first().length > 1994) {
+                                while (stats.size > 0) {
+                                    if (temp.length + stats.first().length > 1994) {
                                         messages.add(temp)
                                         temp = ""
                                     }
@@ -30,7 +30,7 @@ class EmoteCommand {
                                 }
                                 messages.add(temp)
                                 temp = ""
-                                messages.forEach {ctx.channel.sendMessage("```$it```")}
+                                messages.forEach { ctx.channel.sendMessage("```$it```") }
 
                             }
                         }
@@ -63,30 +63,25 @@ class EmoteCommand {
             val emote = ctx.guild.getEmojiByID(key) ?: continue
             data.add(Triple(":${emote.name}:", value.toString(), "%.2f".format((value.toFloat() / sum) * 100) + "%"))
         }
-        val t: MutableList<Map<String, String>> = mutableListOf()
-        for(i in data) {
-            val a: MutableMap<String, String> = mutableMapOf()
-            a["Name"] = i.first
-            a["#"] = i.second
-            a["%"] = i.third
-            t.add(a)
+        val t: List<Map<String, String>> = data.map {
+            mapOf("Name" to it.first, "#" to it.second, "%" to it.third)
         }
         return tablify(t)
     }
 
     fun tablify(list: List<Map<String, String>>): String {
         val columnLengths = mutableListOf<Int>()
-        for(key in list[0].keys) {
+        for (key in list[0].keys) {
             columnLengths.add(list.maxBy { it.get(key)!!.length }!!.get(key)!!.length)
         }
 
         val output: MutableList<String> = mutableListOf()
-        val spacer = "\n╠═${columnLengths.map { "".padEnd(it,'═') }.joinToString("═╬═")}═╣\n"
-        var prefix = "╔${columnLengths.map { "".padEnd(it + 2,'═') }.joinToString("╦")}╗"
-        prefix += "\n║ ${columnLengths.mapIndexed {index, it -> list[0].keys.elementAt(index).padEnd(it)}.joinToString(" ║ ")} ║ $spacer"
-        val postfix = "\n╚${columnLengths.map { "".padEnd(it + 2,'═') }.joinToString("╩")}╝"
+        val spacer = "\n╠═${columnLengths.map { "".padEnd(it, '═') }.joinToString("═╬═")}═╣\n"
+        var prefix = "╔${columnLengths.map { "".padEnd(it + 2, '═') }.joinToString("╦")}╗"
+        prefix += "\n║ ${columnLengths.mapIndexed { index, it -> list[0].keys.elementAt(index).padEnd(it) }.joinToString(" ║ ")} ║ $spacer"
+        val postfix = "\n╚${columnLengths.map { "".padEnd(it + 2, '═') }.joinToString("╩")}╝"
         for (triple in list) {
-            output.add("║ ${columnLengths.mapIndexed {index, it -> triple.values.elementAt(index).padEnd(it)}.joinToString(" ║ ") } ║")
+            output.add("║ ${columnLengths.mapIndexed { index, it -> triple.values.elementAt(index).padEnd(it) }.joinToString(" ║ ")} ║")
         }
         return prefix + output.joinToString(spacer) + postfix
     }

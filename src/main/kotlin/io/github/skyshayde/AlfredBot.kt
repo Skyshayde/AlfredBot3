@@ -49,8 +49,8 @@ class AlfredBot {
 
     companion object {
         private var DISCORD_TOKEN: String = System.getenv("DISCORD_TOKEN")
-        var GCP_TOKEN: String = System.getenv("GCP_TOKEN")
         var GCP_APP_NAME: String = System.getenv("GCP_APP_NAME")
+        var MONGODB_URI: String = System.getenv("MONGODB_URI")
         private var client: IDiscordClient? = createClient(DISCORD_TOKEN, true)
         var dispatcher: EventDispatcher? = client?.dispatcher
         var registry = CommandRegistry("hey alfred, ")
