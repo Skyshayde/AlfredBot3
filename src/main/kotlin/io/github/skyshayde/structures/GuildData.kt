@@ -2,5 +2,6 @@ package io.github.skyshayde.structures
 
 
 data class GuildData(
-        val ID: Long,
-        var roles: Map<String, String>)
+        val _id: Long,
+        val roles: MutableMap<String, String> = mutableMapOf())
+

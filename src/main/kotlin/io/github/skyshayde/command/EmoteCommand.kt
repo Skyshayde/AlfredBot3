@@ -9,6 +9,26 @@ import java.time.ZoneOffset
 
 class EmoteCommand {
 
+    companion object {
+        fun tablify(list: List<Map<String, String>>): String {
+            val columnLengths = mutableListOf<Int>()
+            for (key in list[0].keys) {
+                columnLengths.add(list.maxBy { it.get(key)!!.length }!!.get(key)!!.length)
+            }
+
+            val output: MutableList<String> = mutableListOf()
+            val spacer = "\n╠═${columnLengths.map { "".padEnd(it, '═') }.joinToString("═╬═")}═╣\n"
+            var prefix = "╔${columnLengths.map { "".padEnd(it + 2, '═') }.joinToString("╦")}╗"
+            prefix += "\n║ ${columnLengths.mapIndexed { index, it -> list[0].keys.elementAt(index).padEnd(it) }.joinToString(" ║ ")} ║ $spacer"
+            val postfix = "\n╚${columnLengths.map { "".padEnd(it + 2, '═') }.joinToString("╩")}╝"
+            for (triple in list) {
+                output.add("║ ${columnLengths.mapIndexed { index, it -> triple.values.elementAt(index).padEnd(it) }.joinToString(" ║ ")} ║")
+            }
+            return prefix + output.joinToString(spacer) + postfix
+        }
+
+    }
+
     init {
         val role = Command.builder()
                 .onCalled { ctx ->
@@ -29,7 +49,6 @@ class EmoteCommand {
                                     stats.removeAt(0)
                                 }
                                 messages.add(temp)
-                                temp = ""
                                 messages.forEach { ctx.channel.sendMessage("```$it```") }
 
                             }
@@ -67,23 +86,6 @@ class EmoteCommand {
             mapOf("Name" to it.first, "#" to it.second, "%" to it.third)
         }
         return tablify(t)
-    }
-
-    fun tablify(list: List<Map<String, String>>): String {
-        val columnLengths = mutableListOf<Int>()
-        for (key in list[0].keys) {
-            columnLengths.add(list.maxBy { it.get(key)!!.length }!!.get(key)!!.length)
-        }
-
-        val output: MutableList<String> = mutableListOf()
-        val spacer = "\n╠═${columnLengths.map { "".padEnd(it, '═') }.joinToString("═╬═")}═╣\n"
-        var prefix = "╔${columnLengths.map { "".padEnd(it + 2, '═') }.joinToString("╦")}╗"
-        prefix += "\n║ ${columnLengths.mapIndexed { index, it -> list[0].keys.elementAt(index).padEnd(it) }.joinToString(" ║ ")} ║ $spacer"
-        val postfix = "\n╚${columnLengths.map { "".padEnd(it + 2, '═') }.joinToString("╩")}╝"
-        for (triple in list) {
-            output.add("║ ${columnLengths.mapIndexed { index, it -> triple.values.elementAt(index).padEnd(it) }.joinToString(" ║ ")} ║")
-        }
-        return prefix + output.joinToString(spacer) + postfix
     }
 
 }

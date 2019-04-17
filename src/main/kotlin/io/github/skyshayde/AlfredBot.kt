@@ -5,7 +5,7 @@ import com.darichey.discord.CommandRegistry
 import io.github.skyshayde.command.EmoteCommand
 import io.github.skyshayde.command.RoleCommand
 import io.github.skyshayde.command.ServerCommand
-import io.github.skyshayde.command.admin.RoleAddCommand
+import io.github.skyshayde.command.admin.RoleAdminCommand
 import io.github.skyshayde.features.LevelupCleaner
 import sx.blah.discord.api.ClientBuilder
 import sx.blah.discord.api.IDiscordClient
@@ -41,10 +41,10 @@ fun createClient(token: String, login: Boolean): IDiscordClient? { // Returns a 
 class AlfredBot {
 
     init {
-        var roleCommand: RoleCommand = RoleCommand()
-        var roleAddCommand: RoleAddCommand = RoleAddCommand()
-        var serverCommand: ServerCommand = ServerCommand()
-        var emoteCommand: EmoteCommand = EmoteCommand()
+        RoleCommand()
+        RoleAdminCommand()
+        ServerCommand()
+        EmoteCommand()
     }
 
     companion object {
@@ -54,6 +54,7 @@ class AlfredBot {
         private var client: IDiscordClient? = createClient(DISCORD_TOKEN, true)
         var dispatcher: EventDispatcher? = client?.dispatcher
         var registry = CommandRegistry("hey alfred, ")
+        val db = DBManager()
     }
 
     @EventSubscriber
