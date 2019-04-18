@@ -1,6 +1,5 @@
 package io.github.skyshayde.command.admin
 
-import com.darichey.discord.Command
 import com.darichey.discord.CommandContext
 import io.github.skyshayde.AlfredBot
 import sx.blah.discord.handle.obj.Permissions

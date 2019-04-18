@@ -71,14 +71,14 @@ class AlfredBot {
         fun tablify(list: List<Map<String, String>>): String {
             val columnLengths = mutableListOf<Int>()
             for (key in list[0].keys) {
-                columnLengths.add(list.maxBy { it.get(key)!!.length }!!.get(key)!!.length)
+                columnLengths.add(list.maxBy { it.getValue(key).length }!!.getValue(key).length)
             }
 
             val output: MutableList<String> = mutableListOf()
-            val spacer = "\n╠═${columnLengths.map { "".padEnd(it, '═') }.joinToString("═╬═")}═╣\n"
-            var prefix = "╔${columnLengths.map { "".padEnd(it + 2, '═') }.joinToString("╦")}╗"
+            val spacer = "\n╠═${columnLengths.joinToString("═╬═") { "".padEnd(it, '═') }}═╣\n"
+            var prefix = "╔${columnLengths.joinToString("╦") { "".padEnd(it + 2, '═') }}╗"
             prefix += "\n║ ${columnLengths.mapIndexed { index, it -> list[0].keys.elementAt(index).padEnd(it) }.joinToString(" ║ ")} ║ $spacer"
-            val postfix = "\n╚${columnLengths.map { "".padEnd(it + 2, '═') }.joinToString("╩")}╝"
+            val postfix = "\n╚${columnLengths.joinToString("╩") { "".padEnd(it + 2, '═') }}╝"
             for (triple in list) {
                 output.add("║ ${columnLengths.mapIndexed { index, it -> triple.values.elementAt(index).padEnd(it) }.joinToString(" ║ ")} ║")
             }
@@ -92,11 +92,4 @@ class AlfredBot {
         println("AlfredBot has started - " + event.client.applicationClientID)
     }
 
-    fun writeConfig() {
-
-    }
-
-    fun readConfig() {
-
-    }
 }

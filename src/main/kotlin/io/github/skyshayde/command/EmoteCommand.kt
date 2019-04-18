@@ -1,6 +1,5 @@
 package io.github.skyshayde.command
 
-import com.darichey.discord.Command
 import com.darichey.discord.CommandContext
 import io.github.skyshayde.AlfredBot
 import sx.blah.discord.handle.obj.Permissions
@@ -44,7 +43,7 @@ class EmoteCommand(name: String) : io.github.skyshayde.command.Command(name) {
     private fun stats(ctx: CommandContext): String {
         val emoteId = mutableMapOf<Long, Int>()
         val lastMonthTime = LocalDateTime.now().plusMonths(-1).toInstant(ZoneOffset.UTC)
-        val emoteRegex: Regex = Regex("<:(.*?):(.*?)>")
+        val emoteRegex = Regex("<:(.*?):(.*?)>")
         ctx.guild.channels.forEach { i ->
             run {
                 for (message in i.getMessageHistoryTo(lastMonthTime)) {

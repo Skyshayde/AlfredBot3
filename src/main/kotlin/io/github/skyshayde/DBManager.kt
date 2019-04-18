@@ -8,9 +8,9 @@ import org.litote.kmongo.*
 
 
 class DBManager {
-    val client: MongoClient = KMongo.createClient(ConnectionString(AlfredBot.MONGODB_URI))
-    val database: MongoDatabase = client.getDatabase("heroku_05vvg0pg")
-    val collection = database.getCollection<GuildData>("guilddata")
+    private val client: MongoClient = KMongo.createClient(ConnectionString(AlfredBot.MONGODB_URI))
+    private val database: MongoDatabase = client.getDatabase("heroku_05vvg0pg")
+    private val collection = database.getCollection<GuildData>("guilddata")
 
     fun getGuildById(id: Long): GuildData {
         return collection.findOne(GuildData::_id eq id) ?: GuildData(id)
