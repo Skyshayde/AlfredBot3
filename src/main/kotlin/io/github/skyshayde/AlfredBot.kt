@@ -44,11 +44,11 @@ fun createClient(token: String, login: Boolean): IDiscordClient? { // Returns a 
 class AlfredBot {
 
     init {
-        commands["role"] = RoleCommand("role")
-        commands["roles"] = RoleListCommand("roles")
-        commands["addrole"] = RoleAdminCommand("addrole")
-        commands["emote"] = EmoteCommand("emote")
-        commands["help"] = HelpCommand("help")
+        RoleCommand("role")
+        RoleListCommand("roles")
+        RoleAdminCommand("addrole")
+        EmoteCommand("emote")
+        HelpCommand("help")
 
         ServerCommand()
 
