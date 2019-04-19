@@ -22,8 +22,4 @@ class RoleAdminCommand(name: String) : io.github.skyshayde.command.Command(name)
             ctx.channel.sendMessage("I'm sorry, you don't have the permission to use this command.  ")
         }
     }
-
-    init {
-        AlfredBot.registry.register(Command.builder().onCalled { execute(it) }.build(), "addrole")
-    }
 }

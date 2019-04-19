@@ -5,6 +5,7 @@ import com.darichey.discord.CommandRegistry
 import io.github.skyshayde.command.*
 import io.github.skyshayde.command.admin.RoleAdminCommand
 import io.github.skyshayde.features.LevelupCleaner
+import io.github.skyshayde.features.ServerNameRotation
 import sx.blah.discord.api.ClientBuilder
 import sx.blah.discord.api.IDiscordClient
 import sx.blah.discord.api.events.EventDispatcher
@@ -45,6 +46,7 @@ class AlfredBot {
         commands["emote"] = EmoteCommand("emote")
 
         ServerCommand()
+        ServerNameRotation()
     }
 
     companion object {

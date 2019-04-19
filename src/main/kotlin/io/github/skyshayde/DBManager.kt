@@ -4,20 +4,22 @@ import com.mongodb.ConnectionString
 import com.mongodb.MongoClient
 import com.mongodb.client.MongoDatabase
 import io.github.skyshayde.structures.GuildData
+import io.github.skyshayde.structures.GuildName
 import org.litote.kmongo.*
 
 
 class DBManager {
     val client: MongoClient = KMongo.createClient(ConnectionString(AlfredBot.MONGODB_URI))
     val database: MongoDatabase = client.getDatabase("heroku_05vvg0pg")
-    val collection = database.getCollection<GuildData>("guilddata")
+    val guildData = database.getCollection<GuildData>("guilddata")
+    val nameRotateData = database.getCollection<GuildName>("tnsnamerotation")
 
     fun getGuildById(id: Long): GuildData {
-        return collection.findOne(GuildData::_id eq id) ?: GuildData(id)
+        return guildData.findOne(GuildData::_id eq id) ?: GuildData(id)
     }
 
     fun setGuildById(id: Long, guildData: GuildData) {
-        collection.save(guildData)
+        this.guildData.save(guildData)
     }
 
     fun getRolesByGuildId(id: Long): Map<String, String> {
