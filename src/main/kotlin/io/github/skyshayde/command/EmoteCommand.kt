@@ -1,6 +1,5 @@
 package io.github.skyshayde.command
 
-import com.darichey.discord.Command
 import com.darichey.discord.CommandContext
 import io.github.skyshayde.AlfredBot
 import sx.blah.discord.handle.obj.Permissions
@@ -8,9 +7,14 @@ import java.time.LocalDateTime
 import java.time.ZoneOffset
 
 class EmoteCommand(name: String) : io.github.skyshayde.command.Command(name) {
-    override val help: String
-        get() = ""
+    override val desc: String
+        get() = "Lists statistics for emote usage"
 
+    override val help: String
+        get() = "" +
+                "Name: emote\n" +
+                "Usage: hey alfred, emote stats\n" +
+                "Notes: I don't really have anything else to do with this.  Ping me if you have ideas.  "
     override fun execute(ctx: CommandContext) {
         val cmdArgs = ctx.args
         if (cmdArgs.size > 0) {
@@ -39,7 +43,7 @@ class EmoteCommand(name: String) : io.github.skyshayde.command.Command(name) {
     private fun stats(ctx: CommandContext): String {
         val emoteId = mutableMapOf<Long, Int>()
         val lastMonthTime = LocalDateTime.now().plusMonths(-1).toInstant(ZoneOffset.UTC)
-        val emoteRegex: Regex = Regex("<:(.*?):(.*?)>")
+        val emoteRegex = Regex("<:(.*?):(.*?)>")
         ctx.guild.channels.forEach { i ->
             run {
                 for (message in i.getMessageHistoryTo(lastMonthTime)) {

@@ -1,5 +1,6 @@
 package io.github.skyshayde
 
+import ch.qos.logback.classic.Level
 import com.darichey.discord.CommandListener
 import com.darichey.discord.CommandRegistry
 import io.github.skyshayde.command.*
@@ -12,6 +13,10 @@ import sx.blah.discord.api.events.EventDispatcher
 import sx.blah.discord.api.events.EventSubscriber
 import sx.blah.discord.handle.impl.events.ReadyEvent
 import sx.blah.discord.util.DiscordException
+import org.slf4j.LoggerFactory
+import ch.qos.logback.classic.LoggerContext
+
+
 
 
 fun main() {
@@ -40,13 +45,20 @@ fun createClient(token: String, login: Boolean): IDiscordClient? { // Returns a 
 class AlfredBot {
 
     init {
-        commands["role"] = RoleCommand("role")
-        commands["roles"] = RoleListCommand("roles")
-        commands["addrole"] = RoleAdminCommand("addrole")
-        commands["emote"] = EmoteCommand("emote")
+        RoleCommand("role")
+        RoleListCommand("roles")
+        RoleAdminCommand("addrole")
+        EmoteCommand("emote")
+        HelpCommand("help")
 
         ServerCommand()
         ServerNameRotation()
+
+
+
+        val loggerContext = LoggerFactory.getILoggerFactory() as LoggerContext
+        val rootLogger = loggerContext.getLogger("org.mongodb.driver")
+        rootLogger.level = Level.OFF
     }
 
     companion object {
@@ -62,14 +74,14 @@ class AlfredBot {
         fun tablify(list: List<Map<String, String>>): String {
             val columnLengths = mutableListOf<Int>()
             for (key in list[0].keys) {
-                columnLengths.add(list.maxBy { it.get(key)!!.length }!!.get(key)!!.length)
+                columnLengths.add(list.maxBy { it.getValue(key).length }!!.getValue(key).length)
             }
 
             val output: MutableList<String> = mutableListOf()
-            val spacer = "\n╠═${columnLengths.map { "".padEnd(it, '═') }.joinToString("═╬═")}═╣\n"
-            var prefix = "╔${columnLengths.map { "".padEnd(it + 2, '═') }.joinToString("╦")}╗"
+            val spacer = "\n╠═${columnLengths.joinToString("═╬═") { "".padEnd(it, '═') }}═╣\n"
+            var prefix = "╔${columnLengths.joinToString("╦") { "".padEnd(it + 2, '═') }}╗"
             prefix += "\n║ ${columnLengths.mapIndexed { index, it -> list[0].keys.elementAt(index).padEnd(it) }.joinToString(" ║ ")} ║ $spacer"
-            val postfix = "\n╚${columnLengths.map { "".padEnd(it + 2, '═') }.joinToString("╩")}╝"
+            val postfix = "\n╚${columnLengths.joinToString("╩") { "".padEnd(it + 2, '═') }}╝"
             for (triple in list) {
                 output.add("║ ${columnLengths.mapIndexed { index, it -> triple.values.elementAt(index).padEnd(it) }.joinToString(" ║ ")} ║")
             }
@@ -83,11 +95,4 @@ class AlfredBot {
         println("AlfredBot has started - " + event.client.applicationClientID)
     }
 
-    fun writeConfig() {
-
-    }
-
-    fun readConfig() {
-
-    }
 }

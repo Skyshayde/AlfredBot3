@@ -9,7 +9,7 @@ import sx.blah.discord.handle.obj.IMessage
 
 class LevelupCleaner {
     companion object {
-        private val POKECORD_ID: Long = 365975655608745985
+        private const val POKECORD_ID: Long = 365975655608745985
     }
 
     @EventSubscriber
