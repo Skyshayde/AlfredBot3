@@ -23,6 +23,7 @@ fun main() {
     AlfredBot.dispatcher?.registerListener(AlfredBot())
     AlfredBot.dispatcher?.registerListener(CommandListener(AlfredBot.registry))
     AlfredBot.dispatcher?.registerListener(LevelupCleaner())
+    AlfredBot.dispatcher?.registerListener(ServerNameRotation())
 
 }
 

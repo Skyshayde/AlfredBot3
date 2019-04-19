@@ -4,10 +4,17 @@ import com.darichey.discord.Command
 import io.github.skyshayde.AlfredBot
 import io.github.skyshayde.structures.GuildName
 import org.litote.kmongo.*
+import sx.blah.discord.api.events.EventSubscriber
+import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent
 import sx.blah.discord.handle.obj.IGuild
+import sx.blah.discord.handle.obj.IMessage
 import sx.blah.discord.handle.obj.Permissions
+import java.net.URL
 
 class ServerNameRotation {
+
+    var wordOfTheDay = ""
+    var words: List<String> = listOf()
 
     init {
         val cmd = Command.builder()
@@ -25,6 +32,7 @@ class ServerNameRotation {
                             ctx.channel.sendMessage(when (ctx.args.first()) {
                                 "" -> rotate(ctx.guild)
                                 "list" -> list()
+                                "wotd" -> wordOfTheDay
                                 else -> "Sorry, ${ctx.args.first()} is not a valid subcommand.  "
                             })
                         }
@@ -33,7 +41,8 @@ class ServerNameRotation {
                     }
                 }
                 .build()
-        AlfredBot.registry.register(cmd, "namerotate")
+        words = URL("https://splasho.com/upgoer5/phpspellcheck/dictionaries/1000.dicin").readText().split("\n")
+        wordOfTheDay = words.shuffled().first()
     }
 
     private fun list(): String {
@@ -56,4 +65,17 @@ class ServerNameRotation {
         guild.changeName(name)
         return "Set name to $name"
     }
+
+    @EventSubscriber
+    fun onChatMessage(event: MessageReceivedEvent) {
+        // Only work in TNS
+        if (event.guild.longID == 478329250349449216) {
+            val m: IMessage = event.message
+            if(m.content.contains(wordOfTheDay)) {
+                rotate(event.guild)
+                wordOfTheDay = words.shuffled().first()
+            }
+        }
+    }
+
 }
