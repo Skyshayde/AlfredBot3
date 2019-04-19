@@ -72,6 +72,7 @@ class AlfredBot {
         val commands: MutableMap<String, Command> = mutableMapOf()
 
         fun tablify(list: List<Map<String, String>>): String {
+            if(list.isEmpty()) return "Empty"
             val columnLengths = mutableListOf<Int>()
             for (key in list[0].keys) {
                 columnLengths.add(list.maxBy { it.getValue(key).length }!!.getValue(key).length)

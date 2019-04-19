@@ -36,22 +36,22 @@ class ServerNameRotation {
         AlfredBot.registry.register(cmd, "namerotate")
     }
 
-    fun list(): String {
+    private fun list(): String {
         val names = AlfredBot.db.nameRotateData.find().toMutableList().map { mapOf("Name" to it._id) }
-        return if (names.size == 0) "No names are stored" else "```${AlfredBot.tablify(names)}```"
+        return if (names.isEmpty()) "No names are stored" else "```${AlfredBot.tablify(names)}```"
     }
 
-    fun add(name: String): String {
+    private fun add(name: String): String {
         AlfredBot.db.nameRotateData.insertOne(GuildName(name))
         return "Added name: $name"
     }
 
-    fun remove(name: String): String {
+    private fun remove(name: String): String {
         AlfredBot.db.nameRotateData.deleteOne(GuildName::_id eq name)
         return "Removed name: $name"
     }
 
-    fun rotate(guild: IGuild): String {
+    private fun rotate(guild: IGuild): String {
         val name = AlfredBot.db.nameRotateData.find().shuffled().first()._id
         guild.changeName(name)
         return "Set name to $name"

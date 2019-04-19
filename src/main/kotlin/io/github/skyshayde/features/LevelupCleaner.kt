@@ -14,12 +14,15 @@ class LevelupCleaner {
 
     @EventSubscriber
     fun onChatMessage(event: MessageReceivedEvent) {
-        val m: IMessage = event.message
-        if (m.author.longID == POKECORD_ID && m.embeds.size > 0) {
-            if (m.embeds.last().description != null && m.embeds.last().description.matches(Regex("Your (.*?) is now level (.*?)!"))) {
-                GlobalScope.launch {
-                    delay(30000)
-                    m.delete()
+        // Only work in Bat Cave
+        if (event.guild.longID == 283862902920839169) {
+            val m: IMessage = event.message
+            if (m.author.longID == POKECORD_ID && m.embeds.size > 0) {
+                if (m.embeds.last().description != null && m.embeds.last().description.matches(Regex("Your (.*?) is now level (.*?)!"))) {
+                    GlobalScope.launch {
+                        delay(30000)
+                        m.delete()
+                    }
                 }
             }
         }
