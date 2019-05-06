@@ -11,7 +11,7 @@ import sx.blah.discord.handle.obj.IMessage
 import sx.blah.discord.handle.obj.Permissions
 import java.net.URL
 
-class ServerNameRotation {
+class ServerNameRotation(name: String) : io.github.skyshayde.command.Command(name) {
 
     var wordOfTheDay = ""
     var words: List<String> = listOf()
@@ -71,7 +71,7 @@ class ServerNameRotation {
         // Only work in TNS
         if (event.guild.longID == 478329250349449216) {
             val m: IMessage = event.message
-            if(m.content.contains(wordOfTheDay)) {
+            if (m.content.contains(wordOfTheDay)) {
                 rotate(event.guild)
                 wordOfTheDay = words.shuffled().first()
             }
