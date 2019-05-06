@@ -53,7 +53,7 @@ class AlfredBot {
         HelpCommand("help")
 
         ServerCommand()
-        ServerNameRotation("namerotate")
+        ServerNameRotation()
 
 
 

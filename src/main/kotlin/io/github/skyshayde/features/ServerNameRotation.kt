@@ -11,7 +11,8 @@ import sx.blah.discord.handle.obj.IMessage
 import sx.blah.discord.handle.obj.Permissions
 import java.net.URL
 
-class ServerNameRotation(name: String) : io.github.skyshayde.command.Command(name) {
+class ServerNameRotation() {
+
 
     var wordOfTheDay = ""
     var words: List<String> = listOf()
@@ -41,6 +42,7 @@ class ServerNameRotation(name: String) : io.github.skyshayde.command.Command(nam
                     }
                 }
                 .build()
+        AlfredBot.registry.register(cmd, "namerotate")
         words = URL("https://splasho.com/upgoer5/phpspellcheck/dictionaries/1000.dicin").readText().split("\n")
         wordOfTheDay = words.shuffled().first()
     }
