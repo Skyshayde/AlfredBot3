@@ -22,24 +22,21 @@ class ServerNameRotation() {
                 .onCalled { ctx ->
                     val hasPermission = ctx.author.getPermissionsForGuild(ctx.guild).contains(Permissions.ADMINISTRATOR)
                     val isMe = ctx.author.longID == 174667467509989376
-                    if (hasPermission or isMe) {
-                        if (ctx.args.size > 1) {
-                            ctx.channel.sendMessage(when (ctx.args.first()) {
-                                "add" -> add(ctx.args.drop(1).joinToString(" "))
-                                "remove" -> remove(ctx.args.drop(1).joinToString(" "))
-                                else -> "Sorry, ${ctx.args.first()} is not a valid subcommand.  "
-                            })
-                        } else {
-                            ctx.channel.sendMessage(when (ctx.args.first()) {
-                                "" -> rotate(ctx.guild)
-                                "list" -> list()
-                                "wotd" -> wordOfTheDay
-                                else -> "Sorry, ${ctx.args.first()} is not a valid subcommand.  "
-                            })
-                        }
+                    if (ctx.args.size > 1) {
+                        ctx.channel.sendMessage(when (ctx.args.first()) {
+                            "add" -> add(ctx.args.drop(1).joinToString(" "))
+                            "remove" -> remove(ctx.args.drop(1).joinToString(" "))
+                            else -> "Sorry, ${ctx.args.first()} is not a valid subcommand.  "
+                        })
                     } else {
-                        ctx.channel.sendMessage("Sorry, you don't have permission to execute these commands.  ")
+                        ctx.channel.sendMessage(when (ctx.args.first()) {
+                            "" -> rotate(ctx.guild)
+                            "list" -> list()
+                            "wotd" -> wordOfTheDay
+                            else -> "Sorry, ${ctx.args.first()} is not a valid subcommand.  "
+                        })
                     }
+
                 }
                 .build()
         AlfredBot.registry.register(cmd, "namerotate")
