@@ -21,9 +21,7 @@ import ch.qos.logback.classic.LoggerContext
 
 fun main() {
     AlfredBot.dispatcher?.registerListener(AlfredBot())
-    AlfredBot.dispatcher?.registerListener(CommandListener(AlfredBot.registry))
-    AlfredBot.dispatcher?.registerListener(LevelupCleaner())
-    AlfredBot.dispatcher?.registerListener(ServerNameRotation())
+
 
 }
 
@@ -53,13 +51,17 @@ class AlfredBot {
         HelpCommand("help")
 
         ServerCommand()
-        ServerNameRotation()
+        val nameRotation = ServerNameRotation()
 
 
 
         val loggerContext = LoggerFactory.getILoggerFactory() as LoggerContext
         val rootLogger = loggerContext.getLogger("org.mongodb.driver")
         rootLogger.level = Level.OFF
+
+        AlfredBot.dispatcher?.registerListener(CommandListener(AlfredBot.registry))
+        AlfredBot.dispatcher?.registerListener(LevelupCleaner())
+        AlfredBot.dispatcher?.registerListener(nameRotation)
     }
 
     companion object {
