@@ -15,8 +15,9 @@ import sx.blah.discord.handle.impl.events.ReadyEvent
 import sx.blah.discord.util.DiscordException
 import org.slf4j.LoggerFactory
 import ch.qos.logback.classic.LoggerContext
-
-
+import io.github.skyshayde.features.NoMoreWaifuAlts
+import java.time.LocalDateTime
+import java.time.ZoneOffset
 
 
 fun main() {
@@ -52,7 +53,7 @@ class AlfredBot {
 
         ServerCommand()
         val nameRotation = ServerNameRotation()
-
+        val waifuAlts = NoMoreWaifuAlts()
 
 
         val loggerContext = LoggerFactory.getILoggerFactory() as LoggerContext
@@ -62,6 +63,7 @@ class AlfredBot {
         AlfredBot.dispatcher?.registerListener(CommandListener(AlfredBot.registry))
         AlfredBot.dispatcher?.registerListener(LevelupCleaner())
         AlfredBot.dispatcher?.registerListener(nameRotation)
+        AlfredBot.dispatcher?.registerListener(waifuAlts)
     }
 
     companion object {
@@ -75,7 +77,7 @@ class AlfredBot {
         val commands: MutableMap<String, Command> = mutableMapOf()
 
         fun tablify(list: List<Map<String, String>>): String {
-            if(list.isEmpty()) return "Empty"
+            if (list.isEmpty()) return "Empty"
             val columnLengths = mutableListOf<Int>()
             for (key in list[0].keys) {
                 columnLengths.add(list.maxBy { it.getValue(key).length }!!.getValue(key).length)
